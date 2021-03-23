@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: ft_nginx:latest
+        image: ft_nginx
         imagePullPolicy: Never
         ports:
         - containerPort: 80
