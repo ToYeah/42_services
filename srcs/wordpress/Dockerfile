@@ -4,18 +4,33 @@ FROM alpine
 RUN		set -eux;\
 		apk update;\
 		apk add \
+		wget \
 		nginx \
 		openssl \
 		openssh \
-		openrc
+		openrc \
+		php-fpm \
+		php-mbstring
 
 #copy files
-COPY	./srcs/ft_wordpress_nginx.conf /etc/nginx/http.d/nginx.conf
-COPY	./srcs/index.html /var/www/
+RUN		rm -f /var/lib/nginx/html/index.html
+COPY	./srcs/ft_nginx.conf /etc/nginx/http.d/ft_nginx.conf
+COPY	./srcs/index.html /var/lib/nginx/html/
 
 #setup nginx workspace
 RUN		mkdir -p /run/nginx;\
-		rm /etc/nginx/http.d/default.conf
+		rm /etc/nginx/http.d/default.conf;\
+		chown -R nginx:nginx /var/lib/nginx/html/
+
+#setup wordpress
+RUN		set -eux;\
+		wget -O /tmp/latest.tar.gz --no-check-certificate https://wordpress.org/latest.tar.gz;\
+		tar -xvzf /tmp/latest.tar.gz -C /var/lib/nginx/html/;\
+		rm /tmp/latest.tar.gz;
+
+#COPY	./srcs/wp-config.php /var/www/html/wordpress/wp-config.php
+
+RUN		chown -R nginx:nginx /var/lib/nginx/html/wordpress
 
 #setup ssl
 RUN		 mkdir /etc/nginx/ssl;\
