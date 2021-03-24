@@ -10,12 +10,14 @@ RUN		set -eux;\
 		openrc
 
 #copy files
+RUN		rm -f /var/lib/nginx/html/index.html
 COPY	./srcs/ft_nginx.conf /etc/nginx/http.d/ft_nginx.conf
-COPY	./srcs/index.html /var/www/
+COPY	./srcs/index.html /var/lib/nginx/html/
 
 #setup nginx workspace
 RUN		mkdir -p /run/nginx;\
-		rm /etc/nginx/http.d/default.conf
+		rm /etc/nginx/http.d/default.conf;\
+		chown -R nginx:nginx /var/lib/nginx/html/
 
 #setup ssl
 RUN		 mkdir /etc/nginx/ssl;\
