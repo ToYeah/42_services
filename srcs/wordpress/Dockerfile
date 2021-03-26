@@ -28,7 +28,10 @@ RUN		set -eux;\
 		tar -xvzf /tmp/latest.tar.gz -C /var/lib/nginx/html/;\
 		rm /tmp/latest.tar.gz;
 
-#COPY	./srcs/wp-config.php /var/www/html/wordpress/wp-config.php
+RUN		rm /etc/php7/php-fpm.d/www.conf
+
+COPY	./srcs/wp-config.php /var/lib/nginx/html/wordpress/wp-config.php
+COPY 	./srcs/www.conf  /etc/php7/php-fpm.d/www.conf
 
 RUN		chown -R nginx:nginx /var/lib/nginx/html/wordpress
 
@@ -38,4 +41,7 @@ RUN		 mkdir /etc/nginx/ssl;\
 		openssl req -new -subj /CN=localhost -key /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.csr;\
 		openssl x509 -days 3650 -req -signkey /etc/nginx/ssl/server.key -in /etc/nginx/ssl/server.csr -out /etc/nginx/ssl/server.crt;
 
-CMD		["/usr/sbin/nginx", "-g", "daemon off;"]
+COPY	srcs/start.sh /start.sh
+RUN		chmod 744 /start.sh
+
+ENTRYPOINT [ "/start.sh" ]
