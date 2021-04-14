@@ -3,14 +3,26 @@ FROM alpine
 #apk install
 RUN		set -eux;\
 		apk update;\
-		apk add \
+		apk --no-cache add \
 		wget \
 		nginx \
 		openssl \
 		openssh \
 		openrc \
-		php-fpm \
-		php-mbstring
+		php7 \
+		php7-fpm \
+		php7-curl \
+		php7-dom \
+		php7-exif \
+		php7-fileinfo \
+		php7-json \
+		php7-mbstring \
+		php7-mysqli \
+		php7-sodium \
+		php7-openssl \
+		php7-imagick \
+		php7-xml \
+		php7-zip
 
 #copy files
 RUN		rm -f /var/lib/nginx/html/index.html
